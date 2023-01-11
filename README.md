@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# stacks-ceramic-integration-demo
 
-## Getting Started
+Demo application used to test the Stacks integration in ceramic.
 
-First, run the development server:
+## Usage
 
-```bash
-npm run dev
-# or
-yarn dev
+### 1. Setup updated js-did packages
+
+```sh
+git clone https://github.com/pradel/js-did.git
+cd js-did
+git checkout feature/stacks-integration
+
+pnpm install
+pnpm build
+cd packages/cacao
+pnpm pack --pack-destination ../../../js-ceramic
+pnpm pack --pack-destination ../pkh-stacks
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+In `packages/pkh-stacks/package.json` replace `"@didtools/cacao": "workspace:^1.1.0",` with `"@didtools/cacao": "file:./didtools-cacao-1.1.0.tgz",`.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```sh
+cd packages/pkh-stacks
+pnpm pack --pack-destination ../../../js-ceramic
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 2. Setup the local ceramic daemon
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```sh
+git clone https://github.com/pradel/js-ceramic.git
+cd js-ceramic
+git checkout feature/stacks-integration
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+npm install
+npm run build
+npm link ../js-did/packages/pkh-stacks
+npm install
+```
 
-## Learn More
+The ceramic daemon is now running on port 7007.
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Setup demo application
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+git clone https://github.com/pradel/stacks-ceramic-integration.git
+cd stacks-ceramic-integration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+pnpm install
+pnpm dev
+pnpm link ../js-did/packages/cacao
+pnpm link ../js-did/packages/pkh-stacks
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Application is now running on port 3000, open it in your browser to see the demo!
