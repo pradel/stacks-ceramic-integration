@@ -3,6 +3,8 @@ import { showConnect, UserData } from "@stacks/connect";
 import { useEffect, useState } from "react";
 import { DIDSession } from "did-session";
 import { StacksWebAuth, getAccountId } from "@didtools/pkh-stacks";
+import { CeramicClient } from "@ceramicnetwork/http-client";
+import { TileDocument } from "@ceramicnetwork/stream-tile";
 import styles from "../styles/Home.module.css";
 import { userSession } from "../userSession";
 
@@ -57,6 +59,18 @@ export default function Home() {
     console.log({ session });
     // @ts-ignore
     console.log({ signature: session.cacao.s.s });
+
+    const ceramic = new CeramicClient("http://127.0.0.1:7007");
+    ceramic.did = session.did;
+    console.log(ceramic);
+
+    const doc = await TileDocument.create(ceramic, { foo: "bar" });
+    console.log(doc);
+    console.log(doc.id.toString());
+
+    const doc1 = await TileDocument.load(ceramic, doc.id.toString());
+    console.log(doc1);
+    console.log(doc1.state.content);
   };
 
   return (

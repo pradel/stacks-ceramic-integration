@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ceramicnetwork/http-client": "2.13.0",
+    "@ceramicnetwork/stream-tile": "2.12.0",
     "@next/font": "13.1.1",
     "@stacks/connect": "7.1.0",
     "@types/node": "18.11.18",
