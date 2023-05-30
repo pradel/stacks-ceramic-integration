@@ -1,4 +1,4 @@
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import { showConnect, UserData } from "@stacks/connect";
 import { useEffect, useState } from "react";
 import { DIDSession } from "did-session";
